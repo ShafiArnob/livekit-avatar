@@ -8,6 +8,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
 
+offers = {"484": "33% Off At Safeway, 90% OFF at Sothby"}
+customers = {"484": "Name: Sara Chen"}
+
 
 @function_tool()
 async def get_weather(context: RunContext, city: str) -> str:  # type: ignore
@@ -39,6 +42,39 @@ async def search_web(context: RunContext, query: str) -> str:  # type: ignore
     except Exception as e:
         logging.error(f"Error searching the web for '{query}': {e}")
         return f"An error occurred while searching the web for '{query}'."
+
+
+@function_tool()
+async def get_offers(member_id: str) -> str:
+    """
+    This gets the offers that the customer has. member_id is required here.
+
+    Args:
+        member_id: member id of the customer
+    """
+    try:
+        return offers[member_id]
+    except Exception as e:
+        print("Error: ", e)
+
+
+@function_tool()
+async def get_customer_info(member_id: str) -> str:
+    """
+    This gets the information of the customer. I Customer wants to check their information. member_id is required here.
+
+    Args:
+        member_id: member id of the customer
+    """
+    try:
+        return customers[member_id]
+    except Exception as e:
+        print("Error: ", e)
+
+
+@function_tool()
+async def subscribe_to_offer() -> str:
+    return "You are subscribe to the offer"
 
 
 @function_tool()

@@ -11,7 +11,14 @@ from livekit.plugins import tavus
 from livekit.plugins import simli
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
-from tools import search_web, send_email, get_weather
+from tools import (
+    search_web,
+    send_email,
+    get_weather,
+    get_customer_info,
+    get_offers,
+    subscribe_to_offer,
+)
 
 
 load_dotenv()
@@ -46,8 +53,11 @@ async def my_agent(ctx: agents.JobContext):
         ),
         tools=[
             # search_web,
+            # get_weather,
             send_email,
-            get_weather,
+            get_offers,
+            get_customer_info,
+            subscribe_to_offer,
         ],
     )
 
