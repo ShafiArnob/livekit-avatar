@@ -1,6 +1,6 @@
 import os
 from livekit import api
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from livekit.api import LiveKitAPI, ListRoomsRequest
@@ -29,9 +29,9 @@ async def generate_room_name():
 
 
 async def get_rooms():
-    lk_api = LiveKitAPI()
-    rooms = await lk_api.room.list_rooms(ListRoomsRequest())
-    await lk_api.aclose()
+    api = LiveKitAPI()
+    rooms = await api.room.list_rooms(ListRoomsRequest())
+    await api.aclose()
     return [room.name for room in rooms.rooms]
 
 
@@ -39,17 +39,29 @@ async def get_rooms():
 async def get_token(
     name: str = Query(default="my name"), room: str = Query(default=None)
 ):
-    if not room:
-        room = await generate_room_name()
+    try:
+        if not room:
+            room = await generate_room_name()
 
-    token = (
-        api.AccessToken(os.getenv("LIVEKIT_API_KEY"), os.getenv("LIVEKIT_API_SECRET"))
-        .with_identity(name)
-        .with_name(name)
-        .with_grants(api.VideoGrants(room_join=True, room=room))
-    )
+        print("--> API: /getToken ->", "Name:", name, "Room: ", room)
+        print(
+            "KEY: ",
+            os.getenv("LIVEKIT_API_KEY"),
+            " Secret: ",
+            os.getenv("LIVEKIT_API_SECRET"),
+        )
+        token = (
+            api.AccessToken()
+            .with_identity(name)
+            .with_name(name)
+            .with_grants(api.VideoGrants(room_join=True, room=room))
+        )
+        token_jwt = token.to_jwt()
+        print("--> API: /getToken ->", "Token:", token)
 
-    return {"token": token.to_jwt(), "room": room}
+        return Response(content=token_jwt, media_type="text/plain")
+    except Exception as e:
+        print("Error: ", e)
 
 
 if __name__ == "__main__":

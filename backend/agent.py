@@ -32,7 +32,7 @@ async def my_agent(ctx: agents.JobContext):
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
             api_version="2024-10-01-preview",
-            voice="onyx",
+            voice="alloy",
             temperature=0.8,
             # turn_detection=TurnDetection(
             #     type="server_vad",
