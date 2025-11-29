@@ -8,6 +8,7 @@ from livekit.plugins import (
     noise_cancellation,
 )
 from livekit.plugins import tavus
+from livekit.plugins import simli
 
 from prompts import AGENT_INSTRUCTION, SESSION_INSTRUCTION
 from tools import search_web, send_email, get_weather
@@ -50,12 +51,24 @@ async def my_agent(ctx: agents.JobContext):
         ],
     )
 
-    avatar = tavus.AvatarSession(
-        replica_id=os.environ.get("REPLICA_ID"),
-        persona_id=os.environ.get("PERSONA_ID"),
-        api_key=os.environ.get("TAVUS_API_KEY"),
-    )
+    # * TAVUS AVATAR
+    # avatar = tavus.AvatarSession(
+    #     replica_id=os.environ.get("REPLICA_ID"),
+    #     persona_id=os.environ.get("PERSONA_ID"),
+    #     api_key=os.environ.get("TAVUS_API_KEY"),
+    # )
+    # # Start the avatar and wait for it to join
+    # await avatar.start(session, room=ctx.room)
 
+    # * Simli
+    avatar = simli.AvatarSession(
+        simli_config=simli.SimliConfig(
+            api_key=os.getenv("SIMLI_API_KEY"),
+            face_id=os.getenv(
+                "SIMLI_FACE_ID"
+            ),  # ID of the Simli face to use for your avatar. See "Face setup" for details.
+        ),
+    )
     # Start the avatar and wait for it to join
     await avatar.start(session, room=ctx.room)
 

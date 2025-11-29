@@ -8,6 +8,7 @@ langchain_community
 python-dotenv
 pydantic-ai-slim[openai,mcp]
 livekit-agents[tavus]~=1.0
+livekit-agents[simli]~=1.2
 fastapi
 uvicorn[standard]
 livekit
